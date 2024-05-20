@@ -9,7 +9,7 @@ def getRtData(LAWD_CD, DEAL_YMD):
     #LAWD_CD는  지역번호 (천안시 서북그 : 44133)
     #DEAL_YMD는 날짜
     key = 'moueEHwKWvcAlOWx8KbuFkzCwihNexLOFDAFsd%2B5kvMf%2B7OeeC8%2BvhCBZ2UV8MdSZTGf9VsngtjPvjNLcwHTlg%3D%3D'
-    url = "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade?"
+    url = "	http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade?"
     
     payload = "LAWD_CD=" + str(LAWD_CD) + "&" + \
               "DEAL_YMD=" + str(DEAL_YMD) + "&" + \
@@ -39,7 +39,7 @@ def get_LAND_CD(LAND_CD):
     code = code[code['is_exist'] == '존재']
     code['code'] = code['code'].apply(str)
     
-    gu_code = code[ (code['name'].str.contains(LAND_CD) )]
+    gu_code = code[ (code['name'].str.contains(LAND_CD)) ]
     gu_code = gu_code['code'].reset_index(drop=True)
     gu_code = str(gu_code[0])[0:5]
     return gu_code
@@ -57,16 +57,24 @@ def get_date(StartTime, EndTime):
 Land = input("지역 검색\n > ")
 Lands = get_LAND_CD(Land)
 
+print(Lands)
+
+
 StartTime = input("시작년도 입력(4자리)\n  예시) 2020\n > ")
 EndTime= input ("종료년도 입력(4자리)\n  예시) 2024\n > ")
 Time = get_date(StartTime, EndTime)
 
 item_list = []
 for i in Time:
-    Response = getRtData(Lands, Time)
+    Response = getRtData(Lands, i)
     item_list += get_item(Response)
 items = pd.DataFrame(item_list)
-items.head()
-print(item_list)
-items.to_csv(os.path.join("%s-%s~%s.csv" %(Land, Time[0], Time[1])), index = False, encoding='euc-kr')
+items = items.drop(['거래유형', '동', '등기일자', '매도자', '매수자', '중개사소재지', '해제사유발생일', '해제여부'], axis = 1)
+for i in range(0, len(items)):
+    a = items.loc[i, '거래금액']
+    a = a.replace(',', '')
+    items.loc[i, '거래금액'] = a
 
+items.head()
+items.to_csv(os.path.join("%s.csv" %Land), index = False, encoding='euc-kr')
+# 정보만 가져오는 코드식
