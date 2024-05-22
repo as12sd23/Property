@@ -3,6 +3,8 @@ import pandas as pd
 import xml.etree.ElementTree as ET
 import os
 import time
+import matplotlib.pyplot as plt
+import numpy as np
 
 # 해당 지역 정보 추출
 def Search(player):
@@ -29,20 +31,31 @@ def Search(player):
             
     return item_list
 
-# 정보 타입
-def 
+# 아파트당 가격(년) 분포
+def ApartmentPrice(item_list):
 
+    ApartmentList = []
+    for child in item_list:
+        if '아파트' in child:
+            A_Type = False    
+            for A_name in ApartmentList:
+                if child['아파트'] == A_name:
+                    A_Type = True
+                    break
+            if A_Type == False:
+                ApartmentList.append(child['아파트'])
+
+    for i in ApartmentList:
+        print(i)
 
 player = input('원하는 지역(동/읍/면) 입력\n > ')
 a = Search(str(player))
 
-for i in a:
-    print(i)
+ApartmentPrice(a)
 
 
 '''
 해당 지역의 최근 면적 당 가격 분포
 해당 지역의 한 아파트 가격 변화량
 지역별 구분(기본)
-
 '''

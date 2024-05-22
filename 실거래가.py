@@ -59,10 +59,7 @@ Lands = get_LAND_CD(Land)
 
 print(Lands)
 
-
-StartTime = input("시작년도 입력(4자리)\n  예시) 2020\n > ")
-EndTime= input ("종료년도 입력(4자리)\n  예시) 2024\n > ")
-Time = get_date(StartTime, EndTime)
+Time = get_date(2015, 2024)
 
 item_list = []
 for i in Time:
